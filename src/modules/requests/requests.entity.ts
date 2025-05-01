@@ -1,16 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-@Entity()
-export class Requests {
-  @PrimaryGeneratedColumn()
+// Interface definition for Request objects
+export interface Request {
   id: number;
-
-  @Column()
   telegramId: string;
-
-  @Column()
   message: string;
-
-  @CreateDateColumn()
   createdAt: Date;
 }

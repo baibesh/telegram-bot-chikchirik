@@ -1,17 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Requests } from './requests.entity';
-import { Repository } from 'typeorm';
+import { Request } from './requests.entity';
 
 @Injectable()
 export class RequestsService {
-  constructor(
-    @InjectRepository(Requests)
-    private readonly requestRepository: Repository<Requests>,
-  ) {}
+  // In-memory storage for requests
+  private requests: Request[] = [];
+  private nextId = 1;
 
-  async createRequests(telegramId: string, message: string): Promise<Requests> {
-    const newReq = this.requestRepository.create({ telegramId, message });
-    return this.requestRepository.save(newReq);
+  constructor() {}
+
+  async createRequests(telegramId: string, message: string): Promise<Request> {
+    const newReq: Request = {
+      id: this.nextId++,
+      telegramId,
+      message,
+      createdAt: new Date()
+    };
+
+    this.requests.push(newReq);
+    return newReq;
+  }
+
+  // Additional methods can be added as needed
+  async getAllRequests(): Promise<Request[]> {
+    return this.requests;
+  }
+
+  async getRequestById(id: number): Promise<Request | undefined> {
+    return this.requests.find(req => req.id === id);
   }
 }
