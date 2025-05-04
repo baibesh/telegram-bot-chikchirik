@@ -10,12 +10,12 @@ export class RequestBroadcastProcessor {
   constructor(@InjectBot() private readonly bot: Telegraf<Context>) {}
 
   @Process('send-group-message')
-  async handleSendGroupMessage(job: Job<{ groupId: number; message: string; requestId: number }>) {
+  async handleSendGroupMessage(job: Job<{ groupId: string; message: string; requestId: number }>) {
     const { groupId, message, requestId } = job.data;
     
     try {
       // Send message to the group with inline button
-      await this.bot.telegram.sendMessage(String(groupId), message, {
+      await this.bot.telegram.sendMessage(groupId, message, {
         parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [

@@ -18,5 +18,5 @@ export type Response = {
   date_created: string;
 };
 
-export type Group = { group_id: number; title: string };
+export type Group = { group_id: string; title: string };
 export type User = { id: number; firstName: string; lastName?: string };
