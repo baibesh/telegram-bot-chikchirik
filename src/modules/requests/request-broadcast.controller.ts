@@ -1,0 +1,136 @@
+import { Controller, Post, Body, Param, Get } from '@nestjs/common';
+import { RequestBroadcastService } from './request-broadcast.service';
+import { RequestFormData, Group, User, Response } from '../../common/types/request.types';
+
+/**
+ * Example controller demonstrating how to use the RequestBroadcastService
+ * This is for demonstration purposes only and should be adapted to your actual needs
+ */
+@Controller('request-broadcast')
+export class RequestBroadcastController {
+  constructor(private readonly requestBroadcastService: RequestBroadcastService) {}
+
+  /**
+   * Example endpoint to broadcast a request to multiple groups
+   */
+  @Post('broadcast')
+  async broadcastRequest(
+    @Body('request') request: RequestFormData & { id: number },
+    @Body('groups') groups: Group[],
+    @Body('template') template: string,
+  ) {
+    await this.requestBroadcastService.createRequestBroadcast(request, groups, template);
+    return { success: true, message: 'Request broadcast initiated' };
+  }
+
+  /**
+   * Example endpoint to update responders about changes to a request
+   */
+  @Post('update/:requestId')
+  async updateResponders(
+    @Param('requestId') requestId: number,
+    @Body('request') request: RequestFormData,
+    @Body('responderIds') responderIds: number[],
+    @Body('template') template: string,
+  ) {
+    const requestWithId = { ...request, id: Number(requestId) };
+    await this.requestBroadcastService.updateRequestBroadcast(
+      requestWithId,
+      responderIds,
+      template,
+    );
+    return { success: true, message: 'Update notifications sent' };
+  }
+
+  /**
+   * Example endpoint to notify a customer about a new response
+   */
+  @Post('notify-customer/:requestId')
+  async notifyCustomer(
+    @Param('requestId') requestId: number,
+    @Body('request') request: RequestFormData,
+    @Body('customer') customer: User,
+    @Body('performerId') performerId: number,
+    @Body('response') response: Response,
+    @Body('template') template: string,
+  ) {
+    const requestWithIdAndCustomer = { 
+      ...request, 
+      id: Number(requestId),
+      customer 
+    };
+
+    await this.requestBroadcastService.notifyCustomerOnResponse(
+      requestWithIdAndCustomer,
+      performerId,
+      response,
+      template,
+    );
+
+    return { success: true, message: 'Customer notification sent' };
+  }
+
+  /**
+   * Example endpoint to notify responders about a request being archived
+   */
+  @Post('archive/:requestId')
+  async archiveRequest(
+    @Param('requestId') requestId: number,
+    @Body('request') request: RequestFormData,
+    @Body('responderIds') responderIds: number[],
+    @Body('template') template: string,
+  ) {
+    const requestWithId = { ...request, id: Number(requestId) };
+    await this.requestBroadcastService.archiveRequestBroadcast(
+      requestWithId,
+      responderIds,
+      template,
+    );
+    return { success: true, message: 'Archive notifications sent' };
+  }
+
+  /**
+   * Example endpoint with sample data for testing
+   */
+  @Get('example')
+  getExampleData() {
+    return {
+      request: {
+        id: 1,
+        services: [{ title: 'Cleaning' }, { title: 'Cooking' }],
+        city_id: { title: 'Moscow' },
+        start: new Date().toISOString().split('T')[0] + 'T10:00:00',
+        end: new Date().toISOString().split('T')[0] + 'T14:00:00',
+        address: 'Red Square, 1',
+        title: 'Need help with house cleaning',
+        budget: 5000,
+        description: 'Looking for someone to help clean my apartment',
+      },
+      groups: [
+        { group_id: 123456789, title: 'Cleaners Group' },
+        { group_id: 987654321, title: 'Helpers Group' },
+      ],
+      responderIds: [111222333, 444555666],
+      customer: {
+        id: 777888999,
+        firstName: 'Ivan',
+        lastName: 'Petrov',
+      },
+      performerId: 111222333,
+      response: {
+        id: 1,
+        request_id: 1,
+        performer_id: 111222333,
+        message: 'I can help you with cleaning',
+        price_offer: 4500,
+        date_created: new Date().toISOString(),
+      },
+      templates: {
+        broadcast: 'New request: {{title}}\nBudget: {{budget}} RUB\nLocation: {{city_id}}\nServices: {{services}}\nDescription: {{description}}',
+        update: 'Request #{{id}} has been updated!\nNew budget: {{budget}} RUB',
+        notification: 'New response for your request "{{title}}"\nPrice offer: {{priceOffer}} RUB\nMessage: {{responseMessage}}',
+        archive: 'Request #{{id}} "{{title}}" has been archived',
+      }
+    };
+  }
+}
