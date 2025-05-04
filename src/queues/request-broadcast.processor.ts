@@ -12,9 +12,8 @@ export class RequestBroadcastProcessor {
   @Process('send-group-message')
   async handleSendGroupMessage(job: Job<{ groupId: string; message: string; requestId: number }>) {
     const { groupId, message, requestId } = job.data;
-    
+
     try {
-      // Send message to the group with inline button
       await this.bot.telegram.sendMessage(groupId, message, {
         parse_mode: 'HTML',
         reply_markup: {
@@ -22,13 +21,13 @@ export class RequestBroadcastProcessor {
             [
               {
                 text: 'Откликнуться',
-                callback_data: `respond:${requestId}`,
+                url: `https://t.me/Chikchirik_bird_bot/app?startapp=performer/requests`,
               },
             ],
           ],
         },
       });
-      
+
       return { success: true, groupId };
     } catch (error) {
       console.error(`Failed to send message to group ${groupId}:`, error.message);
@@ -39,9 +38,8 @@ export class RequestBroadcastProcessor {
   @Process('send-personal-message')
   async handleSendPersonalMessage(job: Job<{ userId: number; message: string; requestId: number }>) {
     const { userId, message, requestId } = job.data;
-    
+
     try {
-      // Send personal message to the user
       await this.bot.telegram.sendMessage(String(userId), message, {
         parse_mode: 'HTML',
         reply_markup: {
@@ -55,7 +53,7 @@ export class RequestBroadcastProcessor {
           ],
         },
       });
-      
+
       return { success: true, userId };
     } catch (error) {
       console.error(`Failed to send message to user ${userId}:`, error.message);

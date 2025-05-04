@@ -97,7 +97,7 @@ export class RequestBroadcastController {
     return {
       request: {
         id: 1,
-        services: [{ title: 'Cleaning' }, { title: 'Cooking' }],
+        services: [{ services_id: { title: 'Cleaning' } }, { services_id: { title: 'Cooking' } }],
         city_id: { title: 'Moscow' },
         start: new Date().toISOString().split('T')[0] + 'T10:00:00',
         end: new Date().toISOString().split('T')[0] + 'T14:00:00',
@@ -126,9 +126,9 @@ export class RequestBroadcastController {
         date_created: new Date().toISOString(),
       },
       templates: {
-        broadcast: 'New request: {{title}}\nBudget: {{budget}} RUB\nLocation: {{city_id}}\nServices: {{services}}\nDescription: {{description}}',
-        update: 'Request #{{id}} has been updated!\nNew budget: {{budget}} RUB',
-        notification: 'New response for your request "{{title}}"\nPrice offer: {{priceOffer}} RUB\nMessage: {{responseMessage}}',
+        broadcast: 'New request: {{title}}\nBudget: {{budget}} Тенге\nLocation: {{city_id}}\nServices: {{services}}\nDescription: {{description}}',
+        update: 'Request #{{id}} has been updated!\nNew budget: {{budget}} Тенге',
+        notification: 'New response for your request "{{title}}"\nPrice offer: {{priceOffer}} Тенге\nMessage: {{responseMessage}}',
         archive: 'Request #{{id}} "{{title}}" has been archived',
       }
     };

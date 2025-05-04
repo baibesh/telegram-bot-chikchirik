@@ -46,7 +46,7 @@ describe('RequestBroadcastService', () => {
       // Arrange
       const request: RequestFormData & { id: number } = {
         id: 1,
-        services: [{ title: 'Service 1' }, { title: 'Service 2' }],
+        services: [{ services_id: { title: 'Service 1' } }, { services_id: { title: 'Service 2' } }],
         city_id: { title: 'New York' },
         start: '2023-01-01T10:00:00',
         end: '2023-01-01T12:00:00',
@@ -85,7 +85,7 @@ describe('RequestBroadcastService', () => {
       // Arrange
       const request: RequestFormData & { id: number } = {
         id: 1,
-        services: [{ title: 'Service 1' }, { title: 'Service 2' }],
+        services: [{ services_id: { title: 'Service 1' } }, { services_id: { title: 'Service 2' } }],
         city_id: { title: 'New York' },
         start: '2023-01-01T10:00:00',
         end: '2023-01-01T12:00:00',
@@ -120,7 +120,7 @@ describe('RequestBroadcastService', () => {
       // Arrange
       const request: RequestFormData & { id: number; customer: User } = {
         id: 1,
-        services: [{ title: 'Service 1' }],
+        services: [{ services_id: { title: 'Service 1' } }],
         city_id: { title: 'New York' },
         start: '2023-01-01T10:00:00',
         end: '2023-01-01T12:00:00',
@@ -160,7 +160,7 @@ describe('RequestBroadcastService', () => {
       // Arrange
       const request: RequestFormData & { id: number } = {
         id: 1,
-        services: [{ title: 'Service 1' }],
+        services: [{ services_id: { title: 'Service 1' } }],
         city_id: { title: 'New York' },
         start: '2023-01-01T10:00:00',
         end: '2023-01-01T12:00:00',

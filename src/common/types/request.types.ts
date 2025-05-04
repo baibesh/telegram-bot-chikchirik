@@ -1,5 +1,5 @@
 export type RequestFormData = {
-  services: { title: string }[];
+  services: { services_id: { title: string } }[];
   city_id: { title: string };
   start: string;
   end: string;

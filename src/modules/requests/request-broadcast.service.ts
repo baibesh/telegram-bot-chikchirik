@@ -23,7 +23,6 @@ export class RequestBroadcastService {
     groups: Group[],
     template: string,
   ): Promise<void> {
-    // Format the message using the template
     const message = this.formatMessage(template, request);
 
     // Add jobs to the queue for each group (limited to 30 messages per second)
@@ -135,24 +134,24 @@ export class RequestBroadcastService {
         // Handle nested objects
         if (Array.isArray(value) && key === 'services') {
           // Format services array
-          const servicesText = value.map((service: any) => service.title).join(', ');
-          message = message.replace(`{{${key}}}`, servicesText);
+          const servicesText = value.map((service: any) => service.services_id.title).join(', ');
+          message = message.replace(new RegExp(`{{${key}}}`, 'g'), servicesText);
         } else if (key === 'city_id') {
           // Handle city_id object
-          message = message.replace(`{{${key}}}`, (value as any).title);
+          message = message.replace(new RegExp(`{{${key}}}`, 'g'), (value as any).title);
         } else if (key === 'customer') {
-          // Handle customer object
-          const customer = value as User;
-          const fullName = customer.lastName 
-            ? `${customer.firstName} ${customer.lastName}`
-            : customer.firstName;
-          message = message.replace(`{{customerName}}`, fullName);
+          // Skip customer data - don't show requester's data in the message
+          // Remove any placeholders related to customer
+          message = message.replace(/{{customerName}}/g, '');
         }
       } else {
         // Handle primitive values
-        message = message.replace(`{{${key}}}`, String(value));
+        message = message.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
       }
     });
+
+    // Remove any remaining placeholders that weren't in the data object
+    message = message.replace(/{{[^{}]+}}/g, '');
 
     return message;
   }
