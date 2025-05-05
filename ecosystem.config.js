@@ -13,6 +13,7 @@ module.exports = {
         ADMIN: process.env.ADMIN,
         REDIS_HOST: process.env.REDIS_HOST,
         REDIS_PORT: process.env.REDIS_PORT,
+        IMPORT_IP_DENY_LIST: '169.254.169.254',
       },
     },
   ],
