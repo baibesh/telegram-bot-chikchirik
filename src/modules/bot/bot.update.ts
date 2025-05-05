@@ -33,8 +33,8 @@ ${greetingIcon} <b>Добро пожаловать в fastfast!</b>
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'Я заказчик', web_app: { url: 'https://fastfast.kz/' } },
-            { text: 'Я исполнитель', web_app: { url: 'https://fastfast.kz/' } }
+            { text: 'Я заказчик', web_app: { url: 'http://app.firmachi.kz/' } },
+            { text: 'Я исполнитель', web_app: { url: 'http://app.firmachi.kz/' } }
           ]
         ]
       }
