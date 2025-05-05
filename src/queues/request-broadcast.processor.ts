@@ -21,7 +21,10 @@ export class RequestBroadcastProcessor {
     ])
 
     try {
-      await this.bot.telegram.sendMessage(groupId, message);
+      await this.bot.telegram.sendMessage(groupId, message, {
+        parse_mode: 'HTML',
+        reply_markup: keyboard.reply_markup
+      });
 
       return { success: true, groupId };
     } catch (error) {
