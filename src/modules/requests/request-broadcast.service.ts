@@ -25,12 +25,10 @@ export class RequestBroadcastService {
   ): Promise<void> {
     const message = this.formatMessage(template, request);
 
-    // Add jobs to the queue for each group (limited to 30 messages per second)
     for (const group of groups) {
       await this.broadcastQueue.add('send-group-message', {
         groupId: group.group_id,
-        message,
-        requestId: request.id,
+        message
       });
     }
   }

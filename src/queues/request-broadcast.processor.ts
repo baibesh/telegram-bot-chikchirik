@@ -2,7 +2,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
-import { Context, Telegraf } from 'telegraf';
+import { Context, Markup, Telegraf } from 'telegraf';
 
 @Processor('request-broadcast')
 @Injectable()
@@ -10,23 +10,18 @@ export class RequestBroadcastProcessor {
   constructor(@InjectBot() private readonly bot: Telegraf<Context>) {}
 
   @Process('send-group-message')
-  async handleSendGroupMessage(job: Job<{ groupId: string; message: string; requestId: number }>) {
-    const { groupId, message, requestId } = job.data;
+  async handleSendGroupMessage(job: Job<{ groupId: string; message: string }>) {
+    const { groupId, message } = job.data;
+
+    const keyboard = Markup.inlineKeyboard([
+      Markup.button.webApp(
+        'Откликнуться',
+        'https://app.firmachi.kz/performer/requests'
+      )
+    ])
 
     try {
-      await this.bot.telegram.sendMessage(groupId, message, {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: 'Откликнуться',
-                url: `https://t.me/Chikchirik_bird_bot/app?startapp=performer/requests`,
-              },
-            ],
-          ],
-        },
-      });
+      await this.bot.telegram.sendMessage(groupId, message);
 
       return { success: true, groupId };
     } catch (error) {
