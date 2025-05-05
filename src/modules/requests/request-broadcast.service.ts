@@ -35,25 +35,40 @@ export class RequestBroadcastService {
 
   /**
    * Updates responders about changes to a request
-   * @param request - The updated request data with ID
-   * @param responderIds - IDs of users who have already responded
+   * @param responses - Array of responses with performer IDs
+   * @param changes - Object containing the changes made to the request
    * @param template - The template string with placeholders
    */
   async updateRequestBroadcast(
-    request: RequestFormData & { id: number },
-    responderIds: number[],
+    responses: Array<{
+      message: string;
+      price_offer: number;
+      request_id: RequestFormData;
+      performer_id: { user_id: { id: string } };
+    }>,
+    changes: Record<string, any>,
     template: string,
   ): Promise<void> {
-    // Format the message using the template
-    const message = this.formatMessage(template, request);
+    for (const response of responses) {
+      const request = response.request_id;
+      const performerId = response.performer_id.user_id.id;
 
+      // Format the changes for display
+      let changesText = '';
+      for (const [key, value] of Object.entries(changes)) {
+        changesText += `- <b>${key}</b>: ${value}\n`;
+      }
 
-    // Send personal message to each responder
-    for (const responderId of responderIds) {
+      // Format the message using the template
+      const message = this.formatMessage(template, {
+        ...request,
+        changes: changesText,
+      });
+
+      // Send personal message to the performer
       await this.broadcastQueue.add('send-personal-message', {
-        userId: responderId,
+        userId: performerId,
         message,
-        requestId: request.id,
       });
     }
   }

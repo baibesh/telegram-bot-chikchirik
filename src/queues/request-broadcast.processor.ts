@@ -41,8 +41,8 @@ export class RequestBroadcastProcessor {
   }
 
   @Process('send-personal-message')
-  async handleSendPersonalMessage(job: Job<{ userId: number; message: string; requestId: number }>) {
-    const { userId, message, requestId } = job.data;
+  async handleSendPersonalMessage(job: Job<{ userId: number; message: string }>) {
+    const { userId, message } = job.data;
 
     try {
       await this.bot.telegram.sendMessage(String(userId), message, {
@@ -52,7 +52,9 @@ export class RequestBroadcastProcessor {
             [
               {
                 text: 'Обновить предложение',
-                callback_data: `update_response:${requestId}`,
+                web_app: {
+                  url: 'https://app.firmachi.kz/performer/responses',
+                },
               },
             ],
           ],

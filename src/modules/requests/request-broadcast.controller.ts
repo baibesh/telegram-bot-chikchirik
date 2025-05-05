@@ -25,19 +25,22 @@ export class RequestBroadcastController {
   }
 
   /**
-   * Example endpoint to update responders about changes to a request
+   * Endpoint to update responders about changes to a request
    */
-  @Post('update/:requestId')
+  @Post('update')
   async updateResponders(
-    @Param('requestId') requestId: number,
-    @Body('request') request: RequestFormData,
-    @Body('responderIds') responderIds: number[],
+    @Body('responses') responses: Array<{
+      message: string;
+      price_offer: number;
+      request_id: RequestFormData;
+      performer_id: { user_id: { id: string } };
+    }>,
+    @Body('changes') changes: Record<string, any>,
     @Body('template') template: string,
   ) {
-    const requestWithId = { ...request, id: Number(requestId) };
     await this.requestBroadcastService.updateRequestBroadcast(
-      requestWithId,
-      responderIds,
+      responses,
+      changes,
       template,
     );
     return { success: true, message: 'Update notifications sent' };
