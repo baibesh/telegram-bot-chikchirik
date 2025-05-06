@@ -115,22 +115,35 @@ export class RequestBroadcastService {
     let message = template;
 
     if (data.status === 'new') {
-      message = message.replace(/{{status}}/g, '');
+      message = message.replace(/{{status}}/g, 'Новая заявка');
+    } else if (data.status === 'archived') {
+      message = message.replace(/{{status}}/g, 'Архив');
     }
 
     Object.entries(data).forEach(([key, value]) => {
-      if (key === 'status' && value === 'new') {
+      if (key === 'status') {
+        // Status is already handled above
         return;
-      }
-
-      if (typeof value === 'object' && value !== null) {
+      } else if (key === 'start' || key === 'end') {
+        try {
+          const date = new Date(String(value));
+          const formattedDateTime = date.toLocaleString('ru-RU', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          message = message.replace(new RegExp(`{{${key}}}`, 'g'), formattedDateTime);
+        } catch (error) {
+          message = message.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+        }
+      } else if (typeof value === 'object' && value !== null) {
         if (Array.isArray(value) && key === 'services') {
           const servicesText = value.map((service: any) => service.services_id.title).join(', ');
           message = message.replace(new RegExp(`{{${key}}}`, 'g'), servicesText);
         } else if (key === 'city_id') {
           message = message.replace(new RegExp(`{{${key}}}`, 'g'), (value as any).title);
-        } else if (key === 'customer') {
-          message = message.replace(/{{customerName}}/g, '');
         }
       } else {
         message = message.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
