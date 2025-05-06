@@ -8,7 +8,7 @@ import { Buffer } from 'node:buffer';
 export function makeStartAppLink(route: string) {
   const encoded = Buffer
     .from(route)
-    .toString('base64url'); // '/performer/requests' → 'L3BlcmZvcm1lci9yZXF1ZXN0cw'
+    .toString('base64url');
   return `https://t.me/Chikchirik_bird_bot?startapp=${encoded}`;
 }
 

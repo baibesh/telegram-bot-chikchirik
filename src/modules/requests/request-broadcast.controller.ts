@@ -1,19 +1,10 @@
 import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { RequestBroadcastService } from './request-broadcast.service';
 import { RequestFormData, Group, User, Response } from '../../common/types/request.types';
-
-
-/**
- * Example controller demonstrating how to use the RequestBroadcastService
- * This is for demonstration purposes only and should be adapted to your actual needs
- */
 @Controller('request-broadcast')
 export class RequestBroadcastController {
   constructor(private readonly requestBroadcastService: RequestBroadcastService) {}
 
-  /**
-   * Example endpoint to broadcast a request to multiple groups
-   */
   @Post('broadcast')
   async broadcastRequest(
     @Body('request') request: RequestFormData & { id: number },
@@ -24,9 +15,6 @@ export class RequestBroadcastController {
     return { success: true, message: 'Request broadcast initiated' };
   }
 
-  /**
-   * Endpoint to update responders about changes to a request
-   */
   @Post('update')
   async updateResponders(
     @Body('responses') responses: Array<{
@@ -46,9 +34,6 @@ export class RequestBroadcastController {
     return { success: true, message: 'Update notifications sent' };
   }
 
-  /**
-   * Example endpoint to notify a customer about a new response
-   */
   @Post('notify-customer/:requestId')
   async notifyCustomer(
     @Param('requestId') requestId: number,
@@ -74,9 +59,6 @@ export class RequestBroadcastController {
     return { success: true, message: 'Customer notification sent' };
   }
 
-  /**
-   * Example endpoint to notify responders about a request being archived
-   */
   @Post('archive/:requestId')
   async archiveRequest(
     @Param('requestId') requestId: number,
@@ -93,9 +75,6 @@ export class RequestBroadcastController {
     return { success: true, message: 'Archive notifications sent' };
   }
 
-  /**
-   * Example endpoint with sample data for testing
-   */
   @Get('example')
   getExampleData() {
     return {

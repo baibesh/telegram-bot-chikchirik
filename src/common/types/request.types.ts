@@ -7,6 +7,7 @@ export type RequestFormData = {
   title: string;
   budget: number;
   description: string;
+  status: 'new' | 'archived';
 };
 
 export type Response = {
