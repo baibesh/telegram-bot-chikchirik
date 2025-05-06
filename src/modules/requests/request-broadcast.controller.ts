@@ -49,7 +49,6 @@ export class RequestBroadcastController {
 
     await this.requestBroadcastService.notifyCustomerOnResponse(
       requestWithIdAndCustomer,
-      response.performer_id,
       response,
       template,
       performer,
