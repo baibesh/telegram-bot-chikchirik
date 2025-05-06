@@ -81,7 +81,7 @@ export class RequestBroadcastService {
   ): Promise<void> {
     const message = this.formatMessage(template, {
       ...request,
-      performer_id: { full_name: performer.full_name },
+      performer_id: performer.full_name,
       message: response.message || '',
       price_offer: response.price_offer || 0,
     });
