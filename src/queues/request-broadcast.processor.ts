@@ -46,7 +46,6 @@ export class RequestBroadcastProcessor {
 
     const inlineKeyboard = [];
 
-    // Add "Open order" button if requestId is provided
     if (requestId) {
       inlineKeyboard.push([
         {

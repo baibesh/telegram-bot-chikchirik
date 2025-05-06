@@ -24,17 +24,17 @@ export class BotUpdate {
   async start(@Ctx() ctx: SceneContext & Context) {
     const greetingIcon = '👋';
     const message = `
-${greetingIcon} <b>Добро пожаловать в fastfast!</b>
+${greetingIcon} <b>Добро пожаловать! Я — Чик-Чирик, твоя быстрая птичка-курьер!</b>
 
-Мы связываем талантливых специалистов с заказчиками,
-обеспечивая быстрый и удобный поиск профессионалов для ваших нужд.
+Здесь ты сможешь легко найти фотографов, видеографов и монтажёров для своих проектов.
+Оставляй заявку, и исполнители сами откликнутся! 📩🐦
     `;
     await ctx.replyWithHTML(message, {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'Я заказчик', web_app: { url: 'http://app.firmachi.kz/' } },
-            { text: 'Я исполнитель', web_app: { url: 'http://app.firmachi.kz/' } }
+            { text: 'Я заказчик', web_app: { url: 'https://app.firmachi.kz/' } },
+            { text: 'Я исполнитель', web_app: { url: 'https://app.firmachi.kz/become-performer' } }
           ]
         ]
       }
@@ -61,11 +61,6 @@ ${greetingIcon} <b>Добро пожаловать в fastfast!</b>
   @Action('enter_base')
   async enter_base(@Ctx() ctx: SceneContext & Context) {
     await ctx.scene.enter('base');
-  }
-
-  @On('message')
-  async echo(@Ctx() ctx: SceneContext & Context) {
-    await ctx.reply(JSON.stringify(ctx.message, null, '\t'));
   }
 
   @On('my_chat_member')

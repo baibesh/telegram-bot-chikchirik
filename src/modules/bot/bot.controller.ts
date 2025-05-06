@@ -9,7 +9,6 @@ export class BotController {
 
   @Post('message')
   async message(@Body() message: MessageDto) {
-    console.log('message post', message);
     await this.template.add('message', message);
   }
 }
