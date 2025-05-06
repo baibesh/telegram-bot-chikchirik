@@ -49,14 +49,32 @@ export class RequestBroadcastService {
     changes: Record<string, any>,
     template: string,
   ): Promise<void> {
+    // Mapping of field names from English to Russian
+    const fieldNameMap: Record<string, string> = {
+      title: 'Название',
+      address: 'Местоположение',
+      budget: 'Бюджет',
+      start: 'Начало',
+      end: 'Окончание',
+      status: 'Статус',
+      services: 'Услуги',
+      city_id: 'Город'
+    };
+
+    // List of fields to display
+    const allowedFields = Object.keys(fieldNameMap);
+
     for (const response of responses) {
       const request = response.request_id;
       const performerId = response.performer_id.user_id.id;
 
       // Format the changes for display
       let changesText = '';
-      for (const [key, value] of Object.entries(changes)) {
-        changesText += `- <b>${key}</b>: ${value}\n`;
+      for (const key of Object.keys(changes)) {
+        // Only include allowed fields and translate to Russian
+        if (allowedFields.includes(key)) {
+          changesText += `- <b>${fieldNameMap[key]}</b>\n`;
+        }
       }
 
       // Format the message using the template
