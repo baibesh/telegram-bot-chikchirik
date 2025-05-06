@@ -34,26 +34,25 @@ export class RequestBroadcastController {
     return { success: true, message: 'Update notifications sent' };
   }
 
-  @Post('notify-customer/:requestId')
+  @Post('notify-customer')
   async notifyCustomer(
-    @Param('requestId') requestId: number,
-    @Body('request') request: RequestFormData,
-    @Body('customer') customer: User,
-    @Body('performerId') performerId: number,
+    @Body('request') request: RequestFormData & { user_id: string },
     @Body('response') response: Response,
+    @Body('performer') performer: { full_name: string },
     @Body('template') template: string,
   ) {
     const requestWithIdAndCustomer = { 
       ...request, 
-      id: Number(requestId),
-      customer 
+      id: Number(response.request_id),
+      customer: { id: request.user_id }
     };
 
     await this.requestBroadcastService.notifyCustomerOnResponse(
       requestWithIdAndCustomer,
-      performerId,
+      response.performer_id,
       response,
       template,
+      performer,
     );
 
     return { success: true, message: 'Customer notification sent' };

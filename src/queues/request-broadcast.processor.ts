@@ -41,23 +41,37 @@ export class RequestBroadcastProcessor {
   }
 
   @Process('send-personal-message')
-  async handleSendPersonalMessage(job: Job<{ userId: number; message: string }>) {
-    const { userId, message } = job.data;
+  async handleSendPersonalMessage(job: Job<{ userId: number; message: string; requestId?: number }>) {
+    const { userId, message, requestId } = job.data;
+
+    const inlineKeyboard = [];
+
+    // Add "Open order" button if requestId is provided
+    if (requestId) {
+      inlineKeyboard.push([
+        {
+          text: 'Открыть заказ',
+          web_app: {
+            url: `https://app.firmachi.kz/my-requests/${requestId}`,
+          },
+        },
+      ]);
+    } else {
+      inlineKeyboard.push([
+        {
+          text: 'Обновить предложение',
+          web_app: {
+            url: 'https://app.firmachi.kz/performer/responses',
+          },
+        },
+      ]);
+    }
 
     try {
       await this.bot.telegram.sendMessage(String(userId), message, {
         parse_mode: 'HTML',
         reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: 'Обновить предложение',
-                web_app: {
-                  url: 'https://app.firmachi.kz/performer/responses',
-                },
-              },
-            ],
-          ],
+          inline_keyboard: inlineKeyboard,
         },
       });
 

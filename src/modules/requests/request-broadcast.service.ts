@@ -22,7 +22,7 @@ export class RequestBroadcastService {
     for (const group of groups) {
       await this.broadcastQueue.add('send-group-message', {
         groupId: group.group_id,
-        message
+        message,
       });
     }
   }
@@ -45,7 +45,7 @@ export class RequestBroadcastService {
       end: 'Окончание',
       status: 'Статус',
       services: 'Услуги',
-      city_id: 'Город'
+      city_id: 'Город',
     };
 
     const allowedFields = Object.keys(fieldNameMap);
@@ -74,22 +74,21 @@ export class RequestBroadcastService {
   }
 
   async notifyCustomerOnResponse(
-    request: RequestFormData & { id: number; customer: User },
-    performerId: number,
+    request: RequestFormData & { id: number; customer: {  id: string } },
     response: Response,
     template: string,
+    performer: { full_name: string },
   ): Promise<void> {
     const message = this.formatMessage(template, {
       ...request,
-      performerId,
-      responseMessage: response.message || '',
-      priceOffer: response.price_offer || 0,
+      performer_id: { full_name: performer.full_name },
+      message: response.message || '',
+      price_offer: response.price_offer || 0,
     });
 
-    const messageWithLink = `${message}\n\nПрофиль исполнителя: tg://user?id=${performerId}`;
     await this.broadcastQueue.add('send-personal-message', {
       userId: request.customer.id,
-      message: messageWithLink,
+      message: message,
       requestId: request.id,
     });
   }
@@ -132,18 +131,32 @@ export class RequestBroadcastService {
             month: 'numeric',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
           });
-          message = message.replace(new RegExp(`{{${key}}}`, 'g'), formattedDateTime);
+          message = message.replace(
+            new RegExp(`{{${key}}}`, 'g'),
+            formattedDateTime,
+          );
         } catch (error) {
-          message = message.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+          message = message.replace(
+            new RegExp(`{{${key}}}`, 'g'),
+            String(value),
+          );
         }
       } else if (typeof value === 'object' && value !== null) {
         if (Array.isArray(value) && key === 'services') {
-          const servicesText = value.map((service: any) => service.services_id.title).join(', ');
-          message = message.replace(new RegExp(`{{${key}}}`, 'g'), servicesText);
+          const servicesText = value
+            .map((service: any) => service.services_id.title)
+            .join(', ');
+          message = message.replace(
+            new RegExp(`{{${key}}}`, 'g'),
+            servicesText,
+          );
         } else if (key === 'city_id') {
-          message = message.replace(new RegExp(`{{${key}}}`, 'g'), (value as any).title);
+          message = message.replace(
+            new RegExp(`{{${key}}}`, 'g'),
+            (value as any).title,
+          );
         }
       } else {
         message = message.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
