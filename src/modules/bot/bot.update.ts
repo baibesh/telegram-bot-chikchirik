@@ -22,45 +22,50 @@ export class BotUpdate {
 
   @Start()
   async start(@Ctx() ctx: SceneContext & Context) {
-    const greetingIcon = '👋';
     const message = `
-${greetingIcon} <b>Добро пожаловать! Я — Чик-Чирик, твоя быстрая птичка-курьер!</b>
+👋 Добро пожаловать! Я — Чик-Чирик, твоя быстрая птичка-курьер!
 
-Здесь ты сможешь легко найти фотографов, видеографов и монтажёров для своих проектов.
-Оставляй заявку, и исполнители сами откликнутся! 📩🐦
+🐦 Я помогаю заказчиком легко и быстро найти исполнителей. 
+
+👇Выбери свою роль и продолжай!
     `;
     await ctx.replyWithHTML(message, {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'Я заказчик', web_app: { url: 'https://app.firmachi.kz/' } },
-            { text: 'Я исполнитель', web_app: { url: 'https://app.firmachi.kz/become-performer' } }
+            { text: 'Я заказчик', web_app: { url: 'https://mini.firmachi.kz/' } },
+            { text: 'Я исполнитель', callback_data: 'become_performer' }
           ]
         ]
       }
     });
   }
 
-  @Hears('/menu')
-  async menu(@Ctx() ctx: SceneContext & Context) {
-    await ctx.reply('This is a menu', {
+  @Action('become_performer')
+  async becomePerformer(@Ctx() ctx: SceneContext & Context) {
+    const message = `
+📢 <b>Важная информация для исполнителей!</b>
+
+✅ Для получения уведомлений о новых заказах, пожалуйста, подпишитесь на наш канал: <a href="https://t.me/chikchirikbird">@chikchirikbird</a>
+
+👤 Также необходимо заполнить свой профиль, чтобы заказчики могли видеть вашу информацию.
+
+🔽 Нажмите на кнопки ниже:
+    `;
+
+    await ctx.answerCbQuery();
+    await ctx.replyWithHTML(message, {
       reply_markup: {
         inline_keyboard: [
-          [{ text: 'Enter Base', callback_data: 'enter_base' }],
-        ],
-      },
+          [
+            { text: 'Подписаться на канал', url: 'https://t.me/chikchirikbird' }
+          ],
+          [
+            { text: 'Заполнить профиль', web_app: { url: 'https://mini.firmachi.kz/become-performer' } }
+          ]
+        ]
+      }
     });
-  }
-
-  @Hears('/remove')
-  async remove(@Ctx() ctx: SceneContext & Context) {
-    await ctx.reply('Session is CLEAR');
-    ctx.session = null;
-  }
-
-  @Action('enter_base')
-  async enter_base(@Ctx() ctx: SceneContext & Context) {
-    await ctx.scene.enter('base');
   }
 
   @On('my_chat_member')

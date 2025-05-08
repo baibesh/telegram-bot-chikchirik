@@ -51,7 +51,7 @@ export class RequestBroadcastProcessor {
         {
           text: 'Открыть заказ',
           web_app: {
-            url: `https://app.firmachi.kz/my-requests/${requestId}`,
+            url: `https://mini.firmachi.kz/my-requests/${requestId}`,
           },
         },
       ]);
@@ -60,7 +60,7 @@ export class RequestBroadcastProcessor {
         {
           text: 'Обновить предложение',
           web_app: {
-            url: 'https://app.firmachi.kz/performer/responses',
+            url: 'https://mini.firmachi.kz/performer/responses',
           },
         },
       ]);
